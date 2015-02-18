@@ -541,6 +541,10 @@ public class SlidingUpPanelLayout extends ViewGroup {
         return mAnchorPoint;
     }
 
+    public float getSlideOffset(){
+        return mSlideOffset;
+    }
+
     /**
      * Sets whether or not the panel overlays the content
      * @param overlayed
