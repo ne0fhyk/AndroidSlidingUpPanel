@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="SlidingUpPanelLayout">
-        <attr name="umanoPanelHeight" format="dimension" />
-        <attr name="umanoShadowHeight" format="dimension" />
+    <declare-styleable name="SlidingPanelLayout">
         <attr name="umanoParalaxOffset" format="dimension" />
         <attr name="umanoFadeColor" format="color" />
         <attr name="umanoFlingVelocity" format="integer" />
@@ -17,6 +15,16 @@
             <enum name="anchored" value="2" />
             <enum name="hidden" value="3" />
         </attr>
+    </declare-styleable>
+
+    <declare-styleable name="SlidingUpPanelLayout">
+        <attr name="umanoPanelHeight" format="dimension" />
+        <attr name="umanoShadowHeight" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="HorizontalSlidingPanelLayout">
+        <attr name="umanoPanelWidth" format="dimension" />
+        <attr name="umanoShadowWidth" format="dimension" />
     </declare-styleable>
 
 </resources>

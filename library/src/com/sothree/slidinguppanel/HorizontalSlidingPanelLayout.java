@@ -15,39 +15,39 @@ import android.view.View;
 import com.nineoldandroids.view.animation.AnimatorProxy;
 import com.sothree.slidinguppanel.library.R;
 
-public class SlidingUpPanelLayout extends SlidingPanelLayout {
+public class HorizontalSlidingPanelLayout extends SlidingPanelLayout {
 
-    private static final String TAG = SlidingUpPanelLayout.class.getSimpleName();
+    private static final String TAG = HorizontalSlidingPanelLayout.class.getSimpleName();
 
     /**
      * Default peeking out panel height
      */
-    private static final int DEFAULT_PANEL_HEIGHT = 68; // dp;
+    private static final int DEFAULT_PANEL_WIDTH = 68; // dp;
 
     /**
      * Default height of the shadow above the peeking out panel
      */
-    private static final int DEFAULT_SHADOW_HEIGHT = 4; // dp;
+    private static final int DEFAULT_SHADOW_WIDTH = 4; // dp;
 
     /**
      * The size of the overhang in pixels.
      */
-    private int mPanelHeight = -1;
+    private int mPanelWidth = -1;
 
     /**
      * The size of the shadow in pixels.
      */
-    private int mShadowHeight = -1;
+    private int mShadowWidth = -1;
 
-    public SlidingUpPanelLayout(Context context) {
+    public HorizontalSlidingPanelLayout(Context context) {
         this(context, null);
     }
 
-    public SlidingUpPanelLayout(Context context, AttributeSet attrs) {
+    public HorizontalSlidingPanelLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SlidingUpPanelLayout(Context context, AttributeSet attrs, int defStyle) {
+    public HorizontalSlidingPanelLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         if (isInEditMode()) {
@@ -61,30 +61,29 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
 
             defAttrs.recycle();
 
-            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SlidingUpPanelLayout);
+            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.HorizontalSlidingPanelLayout);
 
             if (ta != null) {
-                mPanelHeight = ta.getDimensionPixelSize(R.styleable.SlidingUpPanelLayout_umanoPanelHeight, -1);
-                mShadowHeight = ta.getDimensionPixelSize(R.styleable.SlidingUpPanelLayout_umanoShadowHeight, -1);
+                mPanelWidth = ta.getDimensionPixelSize(R.styleable.HorizontalSlidingPanelLayout_umanoPanelWidth, -1);
+                mShadowWidth = ta.getDimensionPixelSize(R.styleable.HorizontalSlidingPanelLayout_umanoShadowWidth, -1);
             }
 
             ta.recycle();
         }
 
         final float density = context.getResources().getDisplayMetrics().density;
-        if (mPanelHeight == -1) {
-            mPanelHeight = (int) (DEFAULT_PANEL_HEIGHT * density + 0.5f);
+        if (mPanelWidth == -1) {
+            mPanelWidth = (int) (DEFAULT_PANEL_WIDTH * density + 0.5f);
         }
-        if (mShadowHeight == -1) {
-            mShadowHeight = (int) (DEFAULT_SHADOW_HEIGHT * density + 0.5f);
+        if (mShadowWidth == -1) {
+            mShadowWidth = (int) (DEFAULT_SHADOW_WIDTH * density + 0.5f);
         }
-
         // If the shadow height is zero, don't show the shadow
-        if (mShadowHeight > 0) {
+        if (mShadowWidth > 0) {
             if (mIsSliding) {
-                mShadowDrawable = getResources().getDrawable(R.drawable.above_shadow);
+                mShadowDrawable = getResources().getDrawable(R.drawable.to_start_of_shadow);
             } else {
-                mShadowDrawable = getResources().getDrawable(R.drawable.below_shadow);
+                mShadowDrawable = getResources().getDrawable(R.drawable.to_end_of_shadow);
             }
 
         } else {
@@ -96,51 +95,51 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
     }
 
     public void setGravity(int gravity) {
-        if (gravity != Gravity.TOP && gravity != Gravity.BOTTOM) {
-            throw new IllegalArgumentException("gravity must be set to either top or bottom");
+        if (gravity != Gravity.LEFT && gravity != Gravity.RIGHT) {
+            throw new IllegalArgumentException("gravity must be set to either left or right");
         }
-        mIsSliding = gravity == Gravity.BOTTOM;
+        mIsSliding = gravity == Gravity.RIGHT;
         if (!mFirstLayout) {
             requestLayout();
         }
     }
 
     /**
-     * Set the collapsed panel height in pixels
+     * Set the collapsed panel width in pixels
      *
-     * @param val A height in pixels
+     * @param val A width in pixels
      */
-    public void setPanelHeight(int val) {
-        mPanelHeight = val;
+    public void setPanelWidth(int val) {
+        mPanelWidth = val;
         if (!mFirstLayout) {
             requestLayout();
         }
     }
 
     /**
-     * @return The current shadow height
+     * @return The current shadow width
      */
-    public int getShadowHeight() {
-        return mShadowHeight;
+    public int getShadowWidth() {
+        return mShadowWidth;
     }
 
     /**
-     * Set the shadow height
+     * Set the shadow width
      *
-     * @param val A height in pixels
+     * @param val A width in pixels
      */
-    public void setShadowHeight(int val) {
-        mShadowHeight = val;
+    public void setShadowWidth(int val) {
+        mShadowWidth = val;
         if (!mFirstLayout) {
             invalidate();
         }
     }
 
     /**
-     * @return The current collapsed panel height
+     * @return The current collapsed panel width
      */
-    public int getPanelHeight() {
-        return mPanelHeight;
+    public int getPanelWidth() {
+        return mPanelWidth;
     }
 
     @Override
@@ -173,7 +172,7 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
             mSlideState = PanelState.HIDDEN;
         }
 
-        int layoutHeight = heightSize - getPaddingTop() - getPaddingBottom();
+        int layoutWidth = widthSize - getPaddingLeft() - getPaddingRight();
 
         // First pass. Measure based on child LayoutParams width/height.
         for (int i = 0; i < childCount; i++) {
@@ -185,25 +184,25 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
                 continue;
             }
 
-            int height = layoutHeight;
+            int width = layoutWidth;
             if (child == mMainView && !mOverlayContent && mSlideState != PanelState.HIDDEN) {
-                height -= mPanelHeight;
+                width -= mPanelWidth;
             }
 
             int childWidthSpec;
             if (lp.width == LayoutParams.WRAP_CONTENT) {
-                childWidthSpec = MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.AT_MOST);
+                childWidthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.AT_MOST);
             } else if (lp.width == LayoutParams.MATCH_PARENT) {
-                childWidthSpec = MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY);
+                childWidthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             } else {
                 childWidthSpec = MeasureSpec.makeMeasureSpec(lp.width, MeasureSpec.EXACTLY);
             }
 
             int childHeightSpec;
             if (lp.height == LayoutParams.WRAP_CONTENT) {
-                childHeightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.AT_MOST);
+                childHeightSpec = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.AT_MOST);
             } else if (lp.height == LayoutParams.MATCH_PARENT) {
-                childHeightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+                childHeightSpec = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);
             } else {
                 childHeightSpec = MeasureSpec.makeMeasureSpec(lp.height, MeasureSpec.EXACTLY);
             }
@@ -211,7 +210,7 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
             child.measure(childWidthSpec, childHeightSpec);
 
             if (child == mSlideableView) {
-                mSlideRange = mSlideableView.getMeasuredHeight() - mPanelHeight;
+                mSlideRange = mSlideableView.getMeasuredWidth() - mPanelWidth;
             }
         }
 
@@ -220,7 +219,7 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        final int paddingLeft = getPaddingLeft();
+        final int paddingStart = getPaddingLeft();
         final int paddingTop = getPaddingTop();
 
         final int childCount = getChildCount();
@@ -234,8 +233,8 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
                     mSlideOffset = mAnchorPoint;
                     break;
                 case HIDDEN:
-                    int newTop = computePanelTopPosition(0.0f) + (mIsSliding ? +mPanelHeight : -mPanelHeight);
-                    mSlideOffset = computeSlideOffset(newTop);
+                    int newStart = computePanelStartPosition(0.0f) + (mIsSliding ? +mPanelWidth : -mPanelWidth);
+                    mSlideOffset = computeSlideOffset(newStart);
                     break;
                 default:
                     mSlideOffset = 0.f;
@@ -251,23 +250,23 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
                 continue;
             }
 
-            final int childHeight = child.getMeasuredHeight();
-            int childTop = paddingTop;
+            final int childWidth = child.getMeasuredWidth();
+            int childStart = paddingStart;
 
             if (child == mSlideableView) {
-                childTop = computePanelTopPosition(mSlideOffset);
+                childStart = computePanelStartPosition(mSlideOffset);
             }
 
             if (!mIsSliding) {
                 if (child == mMainView && !mOverlayContent) {
-                    childTop = computePanelTopPosition(mSlideOffset) + mSlideableView.getMeasuredHeight();
+                    childStart = computePanelStartPosition(mSlideOffset) + mSlideableView.getMeasuredWidth();
                 }
             }
-            final int childBottom = childTop + childHeight;
-            final int childLeft = paddingLeft;
-            final int childRight = childLeft + child.getMeasuredWidth();
+            final int childTop = paddingTop;
+            final int childBottom = childTop + child.getMeasuredHeight();
+            final int childEnd = childStart + childWidth;
 
-            child.layout(childLeft, childTop, childRight, childBottom);
+            child.layout(childStart, childTop, childEnd, childBottom);
         }
 
         if (mFirstLayout) {
@@ -281,7 +280,7 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         // Recalculate sliding panes and their details
-        if (h != oldh) {
+        if (w != oldw) {
             mFirstLayout = true;
         }
     }
@@ -317,12 +316,12 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
                 final float ady = Math.abs(y - mInitialMotionY);
                 final int dragSlop = mDragHelper.getTouchSlop();
 
-                // Handle any horizontal scrolling on the drag view.
-                if (mIsUsingDragViewTouchEvents && adx > dragSlop && ady < dragSlop) {
+                // Handle any vertical scrolling on the drag view.
+                if (mIsUsingDragViewTouchEvents && adx < dragSlop && ady > dragSlop) {
                     return super.onInterceptTouchEvent(ev);
                 }
 
-                if ((ady > dragSlop && adx > ady) || !isDragViewUnder((int) mInitialMotionX, (int) mInitialMotionY)) {
+                if ((adx > dragSlop && ady > adx) || !isDragViewUnder((int) mInitialMotionX, (int) mInitialMotionY)) {
                     mDragHelper.cancel();
                     mIsUnableToDrag = true;
                     return false;
@@ -335,29 +334,29 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
     }
 
     /*
-     * Computes the top position of the panel based on the slide offset.
+     * Computes the start position of the panel based on the slide offset.
      */
-    private int computePanelTopPosition(float slideOffset) {
-        int slidingViewHeight = mSlideableView != null ? mSlideableView.getMeasuredHeight() : 0;
+    private int computePanelStartPosition(float slideOffset) {
+        int slidingViewWidth = mSlideableView != null ? mSlideableView.getMeasuredWidth() : 0;
         int slidePixelOffset = (int) (slideOffset * mSlideRange);
         // Compute the top of the panel if its collapsed
         return mIsSliding
-                ? getMeasuredHeight() - getPaddingBottom() - mPanelHeight - slidePixelOffset
-                : getPaddingTop() - slidingViewHeight + mPanelHeight + slidePixelOffset;
+                ? getMeasuredWidth() - getPaddingRight() - mPanelWidth - slidePixelOffset
+                : getPaddingLeft() - slidingViewWidth + mPanelWidth + slidePixelOffset;
     }
 
     /*
-     * Computes the slide offset based on the top position of the panel
+     * Computes the slide offset based on the start position of the panel
      */
-    private float computeSlideOffset(int topPosition) {
-        // Compute the panel top position if the panel is collapsed (offset 0)
-        final int topBoundCollapsed = computePanelTopPosition(0);
+    private float computeSlideOffset(int startPosition) {
+        // Compute the panel start position if the panel is collapsed (offset 0)
+        final int startBoundCollapsed = computePanelStartPosition(0);
 
         // Determine the new slide offset based on the collapsed top position and the new required
         // top position
         return (mIsSliding
-                ? (float) (topBoundCollapsed - topPosition) / mSlideRange
-                : (float) (topPosition - topBoundCollapsed) / mSlideRange);
+                ? (float) (startBoundCollapsed - startPosition) / mSlideRange
+                : (float) (startPosition - startBoundCollapsed) / mSlideRange);
     }
 
     @Override
@@ -388,40 +387,40 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
                     smoothSlideTo(1.0f, 0);
                     break;
                 case HIDDEN:
-                    int newTop = computePanelTopPosition(0.0f) + (mIsSliding ? +mPanelHeight : -mPanelHeight);
-                    smoothSlideTo(computeSlideOffset(newTop), 0);
+                    int newStart = computePanelStartPosition(0.0f) + (mIsSliding ? +mPanelWidth : -mPanelWidth);
+                    smoothSlideTo(computeSlideOffset(newStart), 0);
                     break;
             }
         }
     }
 
     @SuppressLint("NewApi")
-    private void onPanelDragged(int newTop) {
+    private void onPanelDragged(int newStart) {
         mSlideState = PanelState.DRAGGING;
         // Recompute the slide offset based on the new top position
-        mSlideOffset = computeSlideOffset(newTop);
+        mSlideOffset = computeSlideOffset(newStart);
         // Update the parallax based on the new slide offset
         if (mParallaxOffset > 0 && mSlideOffset >= 0) {
             int mainViewOffset = getCurrentParalaxOffset();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                mMainView.setTranslationY(mainViewOffset);
+                mMainView.setTranslationX(mainViewOffset);
             } else {
-                AnimatorProxy.wrap(mMainView).setTranslationY(mainViewOffset);
+                AnimatorProxy.wrap(mMainView).setTranslationX(mainViewOffset);
             }
         }
         // Dispatch the slide event
         dispatchOnPanelSlide(mSlideableView);
-        // If the slide offset is negative, and overlay is not on, we need to increase the
-        // height of the main content
+        // If the slide offset is negative, and overlay is not on, we need to increase the width of the main content
         LayoutParams lp = (LayoutParams) mMainView.getLayoutParams();
-        int defaultHeight = getHeight() - getPaddingBottom() - getPaddingTop() - mPanelHeight;
+        int defaultWidth = getWidth() - getPaddingEnd() - getPaddingStart() - mPanelWidth;
 
         if (mSlideOffset <= 0 && !mOverlayContent) {
             // expand the main view
-            lp.height = mIsSliding ? (newTop - getPaddingBottom()) : (getHeight() - getPaddingBottom() - mSlideableView.getMeasuredHeight() - newTop);
+            lp.width = mIsSliding ? (newStart - getPaddingEnd()) : (getWidth() - getPaddingEnd() -
+                    mSlideableView.getMeasuredWidth() - newStart);
             mMainView.requestLayout();
-        } else if (lp.height != defaultHeight && !mOverlayContent) {
-            lp.height = defaultHeight;
+        } else if (lp.width != defaultWidth && !mOverlayContent) {
+            lp.width = defaultWidth;
             mMainView.requestLayout();
         }
     }
@@ -437,9 +436,9 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
             canvas.getClipBounds(mTmpRect);
             if (!mOverlayContent) {
                 if (mIsSliding) {
-                    mTmpRect.bottom = Math.min(mTmpRect.bottom, mSlideableView.getTop());
+                    mTmpRect.right = Math.min(mTmpRect.right, mSlideableView.getLeft());
                 } else {
-                    mTmpRect.top = Math.max(mTmpRect.top, mSlideableView.getBottom());
+                    mTmpRect.left = Math.max(mTmpRect.left, mSlideableView.getRight());
                 }
             }
             if (mClipPanel) {
@@ -476,8 +475,8 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
             return false;
         }
 
-        int panelTop = computePanelTopPosition(slideOffset);
-        if (mDragHelper.smoothSlideViewTo(mSlideableView, mSlideableView.getLeft(), panelTop)) {
+        int panelStart = computePanelStartPosition(slideOffset);
+        if (mDragHelper.smoothSlideViewTo(mSlideableView, panelStart, mSlideableView.getTop())) {
             setAllChildrenVisible();
             ViewCompat.postInvalidateOnAnimation(this);
             return true;
@@ -491,17 +490,17 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
 
         // draw the shadow
         if (mShadowDrawable != null) {
-            final int right = mSlideableView.getRight();
-            final int top;
-            final int bottom;
+            final int left;
+            final int right;
+            final int top = mSlideableView.getTop();
+            final int bottom = mSlideableView.getBottom();
             if (mIsSliding) {
-                top = mSlideableView.getTop() - mShadowHeight;
-                bottom = mSlideableView.getTop();
+                left = mSlideableView.getLeft() - mShadowWidth;
+                right = mSlideableView.getRight();
             } else {
-                top = mSlideableView.getBottom();
-                bottom = mSlideableView.getBottom() + mShadowHeight;
+                left = mSlideableView.getRight();
+                right = mSlideableView.getRight() + mShadowWidth;
             }
-            final int left = mSlideableView.getLeft();
             mShadowDrawable.setBounds(left, top, right, bottom);
             mShadowDrawable.draw(c);
         }
@@ -521,7 +520,7 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
         @Override
         public void onViewDragStateChanged(int state) {
             if (mDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
-                mSlideOffset = computeSlideOffset(mSlideableView.getTop());
+                mSlideOffset = computeSlideOffset(mSlideableView.getLeft());
 
                 if (mSlideOffset == 1) {
                     if (mSlideState != PanelState.EXPANDED) {
@@ -553,7 +552,7 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
 
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
-            onPanelDragged(top);
+            onPanelDragged(left);
             invalidate();
         }
 
@@ -562,46 +561,46 @@ public class SlidingUpPanelLayout extends SlidingPanelLayout {
             int target = 0;
 
             // direction is always positive if we are sliding in the expanded direction
-            float direction = mIsSliding ? -yvel : yvel;
+            float direction = mIsSliding ? -xvel : xvel;
 
             if (direction > 0) {
-                // swipe up -> expand
-                target = computePanelTopPosition(1.0f);
+                // swipe left -> expand
+                target = computePanelStartPosition(1.0f);
             } else if (direction < 0) {
                 // swipe down -> collapse
-                target = computePanelTopPosition(0.0f);
+                target = computePanelStartPosition(0.0f);
             } else if (mAnchorPoint != 1 && mSlideOffset >= (1.f + mAnchorPoint) / 2) {
                 // zero velocity, and far enough from anchor point => expand to the top
-                target = computePanelTopPosition(1.0f);
+                target = computePanelStartPosition(1.0f);
             } else if (mAnchorPoint == 1 && mSlideOffset >= 0.5f) {
                 // zero velocity, and far enough from anchor point => expand to the top
-                target = computePanelTopPosition(1.0f);
+                target = computePanelStartPosition(1.0f);
             } else if (mAnchorPoint != 1 && mSlideOffset >= mAnchorPoint) {
-                target = computePanelTopPosition(mAnchorPoint);
+                target = computePanelStartPosition(mAnchorPoint);
             } else if (mAnchorPoint != 1 && mSlideOffset >= mAnchorPoint / 2) {
-                target = computePanelTopPosition(mAnchorPoint);
+                target = computePanelStartPosition(mAnchorPoint);
             } else {
                 // settle at the bottom
-                target = computePanelTopPosition(0.0f);
+                target = computePanelStartPosition(0.0f);
             }
 
-            mDragHelper.settleCapturedViewAt(releasedChild.getLeft(), target);
+            mDragHelper.settleCapturedViewAt(target, releasedChild.getTop());
             invalidate();
         }
 
         @Override
-        public int getViewVerticalDragRange(View child) {
+        public int getViewHorizontalDragRange(View child) {
             return mSlideRange;
         }
 
         @Override
-        public int clampViewPositionVertical(View child, int top, int dy) {
-            final int collapsedTop = computePanelTopPosition(0.f);
-            final int expandedTop = computePanelTopPosition(1.0f);
+        public int clampViewPositionHorizontal(View child, int left, int dx) {
+            final int collapsedStart = computePanelStartPosition(0.f);
+            final int expandedStart = computePanelStartPosition(1.0f);
             if (mIsSliding) {
-                return Math.min(Math.max(top, expandedTop), collapsedTop);
+                return Math.min(Math.max(left, expandedStart), collapsedStart);
             } else {
-                return Math.min(Math.max(top, collapsedTop), expandedTop);
+                return Math.min(Math.max(left, collapsedStart), expandedStart);
             }
         }
     }

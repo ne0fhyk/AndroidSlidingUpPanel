@@ -15,24 +15,24 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
+import com.sothree.slidinguppanel.HorizontalSlidingPanelLayout;
+import com.sothree.slidinguppanel.SlidingPanelLayout;
+import com.sothree.slidinguppanel.SlidingPanelLayout.PanelSlideListener;
+import com.sothree.slidinguppanel.SlidingPanelLayout.PanelState;
 
 public class DemoActivity extends ActionBarActivity {
     private static final String TAG = "DemoActivity";
 
-    private SlidingUpPanelLayout mLayout;
+    private SlidingPanelLayout mLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_demo);
+        setContentView(R.layout.activity_horizontal_demo);
 
-        setSupportActionBar((Toolbar)findViewById(R.id.main_toolbar));
+        setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
 
-
-        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout = (SlidingPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setPanelSlideListener(new PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
@@ -42,13 +42,11 @@ public class DemoActivity extends ActionBarActivity {
             @Override
             public void onPanelExpanded(View panel) {
                 Log.i(TAG, "onPanelExpanded");
-
             }
 
             @Override
             public void onPanelCollapsed(View panel) {
                 Log.i(TAG, "onPanelCollapsed");
-
             }
 
             @Override
@@ -66,10 +64,9 @@ public class DemoActivity extends ActionBarActivity {
         t.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLayout.setPanelState(PanelState.COLLAPSED);
+                mLayout.setPanelState(HorizontalSlidingPanelLayout.PanelState.COLLAPSED);
             }
         });
-
         t = (TextView) findViewById(R.id.name);
         t.setText(Html.fromHtml(getString(R.string.hello)));
         Button f = (Button) findViewById(R.id.follow);
@@ -107,7 +104,7 @@ public class DemoActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_toggle: {
                 if (mLayout != null) {
                     if (mLayout.getPanelState() != PanelState.HIDDEN) {
