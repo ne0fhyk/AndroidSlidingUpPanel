@@ -1,8 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".DemoActivity" >
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DemoActivity">
 
     <com.sothree.slidinguppanel.HorizontalSlidingPanelLayout
         xmlns:sothree="http://schemas.android.com/apk/res-auto"
@@ -11,9 +12,9 @@
         android:layout_height="match_parent"
         android:gravity="right"
         sothree:umanoAnchorPoint="0.5"
-        sothree:umanoPanelWidth="68dp"
+        sothree:umanoPanelWidth="20dp"
         sothree:umanoShadowWidth="4dp"
-        sothree:umanoParalaxOffset="100dp"
+        sothree:umanoParalaxOffset="200dp"
         sothree:umanoDragView="@+id/dragView">
 
         <!-- MAIN CONTENT -->
@@ -22,6 +23,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:background="#ff0000">
+
             <android.support.v7.widget.Toolbar
                 xmlns:sothree="http://schemas.android.com/apk/res-auto"
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -30,6 +32,7 @@
                 android:background="?attr/colorPrimary"
                 sothree:theme="@style/ActionBar"
                 android:layout_width="match_parent"/>
+
             <TextView
                 android:id="@+id/main"
                 android:layout_width="match_parent"
@@ -40,7 +43,7 @@
                 android:clickable="true"
                 android:focusable="false"
                 android:focusableInTouchMode="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"/>
         </FrameLayout>
 
         <!-- SLIDING LAYOUT -->
@@ -83,7 +86,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:scaleType="fitStart"
-                android:src="@drawable/graphic" >
+                android:src="@drawable/graphic">
             </ImageView>
         </LinearLayout>
     </com.sothree.slidinguppanel.HorizontalSlidingPanelLayout>

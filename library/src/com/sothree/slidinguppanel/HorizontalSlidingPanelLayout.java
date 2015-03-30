@@ -369,9 +369,6 @@ public class HorizontalSlidingPanelLayout extends SlidingPanelLayout {
                 || state == mSlideState
                 || mSlideState == PanelState.DRAGGING) return;
 
-        if (mFirstLayout) {
-            mSlideState = state;
-        } else {
             if (mSlideState == PanelState.HIDDEN) {
                 mSlideableView.setVisibility(View.VISIBLE);
                 requestLayout();
@@ -391,7 +388,8 @@ public class HorizontalSlidingPanelLayout extends SlidingPanelLayout {
                     smoothSlideTo(computeSlideOffset(newStart), 0);
                     break;
             }
-        }
+
+            mSlideState = state;
     }
 
     @SuppressLint("NewApi")
