@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -149,7 +148,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
      */
     private View mScrollableView;
     private int mScrollableViewResId;
-    private ScrollableViewHelper mScrollableViewHelper = new ScrollableViewHelper();
+    private com.sothree.slidinguppanel.ScrollableViewHelper mScrollableViewHelper = new com.sothree.slidinguppanel.ScrollableViewHelper();
 
     /**
      * The child view that can slide, if any.
@@ -214,7 +213,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
     private List<PanelSlideListener> mPanelSlideListeners = new ArrayList<>();
     private View.OnClickListener mFadeOnClickListener;
 
-    private final ViewDragHelper mDragHelper;
+    private final com.sothree.slidinguppanel.ViewDragHelper mDragHelper;
 
     /**
      * Stores whether or not the pane was expanded the last time it was slideable.
@@ -339,7 +338,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
 
         setWillNotDraw(false);
 
-        mDragHelper = ViewDragHelper.create(this, 0.5f, scrollerInterpolator, new DragHelperCallback());
+        mDragHelper = com.sothree.slidinguppanel.ViewDragHelper.create(this, 0.5f, scrollerInterpolator, new DragHelperCallback());
         mDragHelper.setMinVelocity(mMinFlingVelocity * density);
 
         mIsTouchEnabled = true;
@@ -574,7 +573,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
      * Sets the current scrollable view helper. See ScrollableViewHelper description for details.
      * @param helper
      */
-    public void setScrollableViewHelper(ScrollableViewHelper helper) {
+    public void setScrollableViewHelper(com.sothree.slidinguppanel.ScrollableViewHelper helper) {
         mScrollableViewHelper = helper;
     }
 
@@ -926,11 +925,15 @@ public class SlidingUpPanelLayout extends ViewGroup {
             return super.onTouchEvent(ev);
         }
         try {
-            mDragHelper.processTouchEvent(ev);
-            return true;
+            if(mDragHelper.processTouchEvent(ev)) {
+                return true;
+            }
+            else{
+                return super.onTouchEvent(ev);
+            }
         } catch (Exception ex) {
             // Ignore the pointer out of range exception
-            return false;
+            return super.onTouchEvent(ev);
         }
     }
 
@@ -1007,7 +1010,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
             // If the scrollable view was handling the touch and we receive an up
             // we want to clear any previous dragging state so we don't intercept a touch stream accidentally
             if (mIsScrollableViewHandlingTouch) {
-                mDragHelper.setDragState(ViewDragHelper.STATE_IDLE);
+                mDragHelper.setDragState(com.sothree.slidinguppanel.ViewDragHelper.STATE_IDLE);
             }
         }
 
@@ -1316,7 +1319,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
         mSlideState = ss.mSlideState != null ? ss.mSlideState : DEFAULT_SLIDE_STATE;
     }
 
-    private class DragHelperCallback extends ViewDragHelper.Callback {
+    private class DragHelperCallback extends com.sothree.slidinguppanel.ViewDragHelper.Callback {
 
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
@@ -1329,7 +1332,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
 
         @Override
         public void onViewDragStateChanged(int state) {
-            if (mDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
+            if (mDragHelper.getViewDragState() == com.sothree.slidinguppanel.ViewDragHelper.STATE_IDLE) {
                 mSlideOffset = computeSlideOffset(mSlideableView.getTop());
                 applyParallaxForCurrentSlideOffset();
 

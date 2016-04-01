@@ -1090,7 +1090,7 @@ public class ViewDragHelper {
      *
      * @param ev The touch event received by the parent view
      */
-    public void processTouchEvent(MotionEvent ev) {
+    public boolean processTouchEvent(MotionEvent ev) {
         final int action = MotionEventCompat.getActionMasked(ev);
         final int actionIndex = MotionEventCompat.getActionIndex(ev);
 
@@ -1117,13 +1117,15 @@ public class ViewDragHelper {
                 // Since the parent is already directly processing this touch event,
                 // there is no reason to delay for a slop before dragging.
                 // Start immediately if possible.
-                tryCaptureViewForDrag(toCapture, pointerId);
+                if(!tryCaptureViewForDrag(toCapture, pointerId)){
+                    return false;
+                }
 
                 final int edgesTouched = mInitialEdgesTouched[pointerId];
                 if ((edgesTouched & mTrackingEdges) != 0) {
                     mCallback.onEdgeTouched(edgesTouched & mTrackingEdges, pointerId);
                 }
-                break;
+                return true;
             }
 
             case MotionEventCompat.ACTION_POINTER_DOWN: {
@@ -1151,7 +1153,7 @@ public class ViewDragHelper {
 
                     tryCaptureViewForDrag(mCapturedView, pointerId);
                 }
-                break;
+                return true;
             }
 
             case MotionEvent.ACTION_MOVE: {
@@ -1190,7 +1192,7 @@ public class ViewDragHelper {
                     }
                     saveLastMotion(ev);
                 }
-                break;
+                return true;
             }
 
             case MotionEventCompat.ACTION_POINTER_UP: {
@@ -1221,7 +1223,7 @@ public class ViewDragHelper {
                     }
                 }
                 clearMotionHistory(pointerId);
-                break;
+                return true;
             }
 
             case MotionEvent.ACTION_UP: {
@@ -1229,7 +1231,7 @@ public class ViewDragHelper {
                     releaseViewForPointerUp();
                 }
                 cancel();
-                break;
+                return true;
             }
 
             case MotionEvent.ACTION_CANCEL: {
@@ -1237,9 +1239,11 @@ public class ViewDragHelper {
                     dispatchViewReleased(0, 0);
                 }
                 cancel();
-                break;
+                return true;
             }
         }
+
+        return false;
     }
 
     private void reportNewEdgeDrags(float dx, float dy, int pointerId) {
